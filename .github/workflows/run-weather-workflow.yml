@@ -1,0 +1,31 @@
+name: Run Weather Workflow
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  run-workflow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      # LLM/APIなど必要な秘密情報がある場合はSecretsから渡してください
+      # 例: OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      MASTRA_CONCURRENCY: "2"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run workflow via tsx
+        run: npx tsx scripts/run-weather-workflow.ts | cat
+
+

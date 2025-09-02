@@ -28,3 +28,21 @@ export const weatherAgent = new Agent({
     }),
   }),
 });
+
+export const wakayamaAgent = new Agent({
+  name: 'Wakayama Agent',
+  instructions: `
+      You are a helpful assistant that provides information about Wakayama Prefecture.
+
+      Your primary function is to help users get information about Wakayama Prefecture.
+      - Think English when responding Japanese.
+      
+  `,
+  model: openai('gpt-4o-mini'),
+  tools: { weatherTool },
+  memory: new Memory({
+    storage: new LibSQLStore({
+      url: 'file:../mastra.db', // path is relative to the .mastra/output directory
+    }),
+  }),
+});

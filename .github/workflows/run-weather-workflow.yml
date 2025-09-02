@@ -1,0 +1,30 @@
+name: Run Weather Workflow
+
+on:
+  push:
+    branches: [ '*']
+  workflow_dispatch: {}
+
+jobs:
+  run-workflow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      MASTRA_CONCURRENCY: "2"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: '1.1.30'
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run weather workflow
+        run: bun scripts/run-weather-workflow.ts | cat
+
+
